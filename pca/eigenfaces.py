@@ -71,6 +71,14 @@ t0 = time()
 pca = PCA(n_components=n_components, whiten=True).fit(X_train)
 print("done in %0.3fs" % (time() - t0))
 
+
+# print("variance explained by the first principal component: ", 
+#       pca.explained_variance_ratio_[0])
+# print("variance explained by the second principal component: ", 
+#       pca.explained_variance_ratio_[1])
+
+
+
 eigenfaces = pca.components_.reshape((n_components, h, w))
 
 print("Projecting the input data on the eigenfaces orthonormal basis")
@@ -78,6 +86,8 @@ t0 = time()
 X_train_pca = pca.transform(X_train)
 X_test_pca = pca.transform(X_test)
 print("done in %0.3fs" % (time() - t0))
+
+
 
 
 ###############################################################################

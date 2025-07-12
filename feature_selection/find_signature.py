@@ -10,8 +10,8 @@ numpy.random.seed(42)
 ### mini-project.
 words_file = "../text_learning/your_word_data.pkl" 
 authors_file = "../text_learning/your_email_authors.pkl"
-word_data = joblib.load( open(words_file, "r"))
-authors = joblib.load( open(authors_file, "r") )
+word_data = joblib.load( open(words_file, "rb"))
+authors = joblib.load( open(authors_file, "rb") )
 
 
 
@@ -27,6 +27,9 @@ vectorizer = TfidfVectorizer(sublinear_tf=True, max_df=0.5, stop_words='english'
 features_train = vectorizer.fit_transform(features_train)
 features_test  = vectorizer.transform(features_test).toarray()
 
+all_features = vectorizer.get_feature_names_out()
+print("word causing overfitting:", all_features[33614])
+
 
 ### a classic way to overfit is to use a small number
 ### of data points and a large number of features;
@@ -37,6 +40,15 @@ labels_train   = labels_train[:150]
 
 
 ### your code goes here
+from sklearn.tree import DecisionTreeClassifier
+clf = DecisionTreeClassifier(random_state=42)
+clf.fit(features_train, labels_train)
+print("Acuracy on training set:", clf.score(features_train, labels_train))
+print("Acuracy on test set:", clf.score(features_test, labels_test))
 
+print("number of training points:", len(features_train))
 
-
+for i in clf.feature_importances_:
+    if i > 0.2:
+        print("Feature importance:", i, ", feature name: ", vectorizer.get_feature_names_out()[list(clf.feature_importances_).index(i)], ", feature index:", list(clf.feature_importances_).index(i))
+        

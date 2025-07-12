@@ -15,6 +15,13 @@ def outlierCleaner(predictions, ages, net_worths):
 
     ### your code goes here
 
-    
-    return cleaned_data
+    for i in range(len(predictions)):
+        error = (predictions[i] - net_worths[i])**2
+        cleaned_data.append((ages[i], net_worths[i], error))
 
+    # sort by error
+    cleaned_data.sort(key=lambda x: x[2])
+
+    # we take away the 10% with the most error
+    limit = int(len(cleaned_data) * 0.9)
+    return cleaned_data[:limit]
